@@ -5,26 +5,37 @@ module.exports.setup = function() {
     var teamsBuilder = require('botbuilder-teams');
     var bot = require('./bot');
 
-    bot.connector.onQuery('getRandomText', function(event, query, callback) {
+    bot.connector.onQuery('getCorrectedText', function(event, query, callback) {
         var faker = require('faker');
 
         // If the user supplied a title via the cardTitle parameter then use it or use a fake title
         var title = query.parameters && query.parameters[0].name === 'cardTitle'
             ? query.parameters[0].value
-            : faker.lorem.sentence();
+            : faker.lorem.paragraph();
 
-        let randomImageUrl = "https://loremflickr.com/200/200"; // Faker's random images uses lorempixel.com, which has been down a lot
-
+        
         // Build the data to send
         var attachments = [];
+        
+        if (title == "bad") {
+           attachments.push(
+                new builder.ThumbnailCard()
+                    .text("different")
+                    .toAttachment());
+        }
 
         // Generate 5 results to send with fake text and fake images
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 3; i++) {
             attachments.push(
                 new builder.ThumbnailCard()
-                    .title(title)
-                    .text(faker.lorem.paragraph())
-                    .images([new builder.CardImage().url(`${randomImageUrl}?random=${i}`)])
+                    .text(faker.lorem.sentence())
+                    .toAttachment());
+        }
+
+        for (var i = 0; i < 2; i++) {
+            attachments.push(
+                new builder.ThumbnailCard()
+                    .text(title)
                     .toAttachment());
         }
 

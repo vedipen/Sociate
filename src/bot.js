@@ -26,7 +26,12 @@ module.exports.setup = function(app) {
     var bot = new builder.UniversalBot(connector, function(session) {
         // Message might contain @mentions which we would like to strip off in the response
         var text = teams.TeamsMessage.getTextWithoutMentions(session.message);
-        session.send('You said: %s', text);
+        if (text == "bad") {
+            session.send('Better say: different');
+        }
+        else {
+            session.send('You said: %s', text);
+        }
     }).set('storage', inMemoryBotStorage);
 
     // Setup an endpoint on the router for the bot to listen.

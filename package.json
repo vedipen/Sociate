@@ -17,12 +17,12 @@
   },
   "homepage": "https://docs.microsoft.com/en-us/microsoftteams/platform/get-started/get-started-nodejs",
   "dependencies": {
-    "botbuilder": "^4.3.4",
-    "botbuilder-teams": "^1.0.0",
+    "botbuilder": "^3.11.0",
+    "botbuilder-teams": "^0.1.6",
     "config": "^1.28.1",
     "express": "^4.16.2",
     "faker": "^4.1.0",
-    "pug": "^2.0.3"
+    "pug": "^2.0.0-rc.4"
   },
   "devDependencies": {
     "del": "^3.0.0",
