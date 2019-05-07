@@ -4,14 +4,13 @@ module.exports.setup = function() {
     var builder = require('botbuilder');
     var teamsBuilder = require('botbuilder-teams');
     var bot = require('./bot');
-
+    
     bot.connector.onQuery('getCorrectedText', function(event, query, callback) {
-        var faker = require('faker');
-
+        
         // If the user supplied a title via the cardTitle parameter then use it or use a fake title
         var title = query.parameters && query.parameters[0].name === 'cardTitle'
             ? query.parameters[0].value
-            : faker.lorem.paragraph();
+            : "Please type your message";
 
         
         // Build the data to send
@@ -23,22 +22,78 @@ module.exports.setup = function() {
                     .text("different")
                     .toAttachment());
         }
+        // const querystring = require('querystring');
+        var postData = JSON.stringify({
+            "comment": {
+                "text": title
+            },
+            "languages": [
+                "en"
+            ],
+            "requestedAttributes": {
+                "TOXICITY": {}
+            }
+        });
+        var out1 = "";
+        
+        console.log(postData);
+        var http = require('https');
+        var options = {
+        host: 'commentanalyzer.googleapis.com',
+        path: '***REMOVED***',
+        port: 443,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': postData.length
+          }
+        };
+        var req = http.request(options, function(res) {
+        console.log('STATUS: ' + res.statusCode);
+        console.log('HEADERS: ' + JSON.stringify(res.headers));
 
-        // Generate 5 results to send with fake text and fake images
-        for (var i = 0; i < 3; i++) {
+        // Buffer the body entirely for processing as a whole.
+        var bodyChunks = [];
+        res.on('data', function(chunk) {
+            // You can process streamed parts here...
+            bodyChunks.push(chunk);
+        }).on('end', function() {
+            var body = Buffer.concat(bodyChunks);
+            console.log('BODY: ' + body);
+            var jsonObj = JSON.parse(body);
+            var out = jsonObj.attributeScores.TOXICITY.summaryScore.value;
+            console.log(out);
+            out1 = out;
+            console.log(out1);
+            
+            // ...and/or process the entire body here.
+        });
+        attachments.push(
+            new builder.ThumbnailCard()
+            .text("Non inclusive nature : " + out1)
+            .toAttachment());
+
+        });
+        
+               
+        req.on('error', function(e) {
+        console.log('ERROR: ' + e.message);
+        });
+
+        req.write(postData);
+        req.end();   
+        // if(title != "Please type your message") {
+        //     attachments.push(
+        //         new builder.ThumbnailCard()
+        //         .text("Non inclusive nature : " + out1)
+        //         .toAttachment());
+        // }
+                   
             attachments.push(
                 new builder.ThumbnailCard()
-                    .text(faker.lorem.sentence())
-                    .toAttachment());
-        }
-
-        for (var i = 0; i < 2; i++) {
-            attachments.push(
-                new builder.ThumbnailCard()
-                    .text(title)
-                    .toAttachment());
-        }
-
+                .text(title)
+                .toAttachment());
+        
         // Build the response to be sent
         var response = teamsBuilder.ComposeExtensionResponse
             .result('list')

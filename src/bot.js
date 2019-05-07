@@ -32,6 +32,58 @@ module.exports.setup = function(app) {
         else {
             session.send('You said: %s', text);
         }
+
+        var postData = JSON.stringify({
+            "comment": {
+                "text": text
+            },
+            "languages": [
+                "en"
+            ],
+            "requestedAttributes": {
+                "TOXICITY": {}
+            }
+        });
+        console.log(postData);
+        var http = require('https');
+        var options = {
+        host: 'commentanalyzer.googleapis.com',
+        path: '***REMOVED***',
+        port: 443,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': postData.length
+          }
+        };
+        var req = http.request(options, function(res) {
+        console.log('STATUS: ' + res.statusCode);
+        console.log('HEADERS: ' + JSON.stringify(res.headers));
+
+        // Buffer the body entirely for processing as a whole.
+        var bodyChunks = [];
+        res.on('data', function(chunk) {
+            // You can process streamed parts here...
+            bodyChunks.push(chunk);
+        }).on('end', function() {
+            var body = Buffer.concat(bodyChunks);
+            console.log('BODY: ' + body);
+            var jsonObj = JSON.parse(body);
+            var out = jsonObj.attributeScores.TOXICITY.summaryScore.value;
+            session.send("Non inclusive nature : " + out);
+            
+            // ...and/or process the entire body here.
+        });
+        });
+
+        req.on('error', function(e) {
+        console.log('ERROR: ' + e.message);
+        });
+
+        req.write(postData);
+        req.end();        
+
+
     }).set('storage', inMemoryBotStorage);
 
     // Setup an endpoint on the router for the bot to listen.
