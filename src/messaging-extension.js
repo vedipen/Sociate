@@ -22,6 +22,28 @@ module.exports.setup = function() {
                     .text("different")
                     .toAttachment());
         }
+
+        if (title.toLowerCase() == "you look gay") {
+            title = "you look different";
+         }
+ 
+         
+        if (title.toLowerCase() == "Dont be so pathetic") {
+            title = "Dont be negative";
+         }
+         
+        if (title.toLowerCase() == "you dont belong here") {
+            title = "you might not be in the right place";
+         }
+         
+        if (title.toLowerCase() == "women in tech are an anomaly") {
+            title = "women in tech are rare";
+         }
+         
+        if (title.toLowerCase() == "hail hydra") {
+            title = "avengers assemble";
+         }
+
         // const querystring = require('querystring');
         var postData = JSON.stringify({
             "comment": {
@@ -68,11 +90,7 @@ module.exports.setup = function() {
             
             // ...and/or process the entire body here.
         });
-        attachments.push(
-            new builder.ThumbnailCard()
-            .text("Non inclusive nature : " + out1)
-            .toAttachment());
-
+        
         });
         
                
@@ -89,10 +107,10 @@ module.exports.setup = function() {
         //         .toAttachment());
         // }
                    
-            attachments.push(
-                new builder.ThumbnailCard()
-                .text(title)
-                .toAttachment());
+        attachments.push(
+            new builder.ThumbnailCard()
+            .text(title)
+            .toAttachment());
         
         // Build the response to be sent
         var response = teamsBuilder.ComposeExtensionResponse
