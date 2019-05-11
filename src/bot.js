@@ -47,8 +47,8 @@ module.exports.setup = function(app) {
         console.log(postData);
         var http = require('https');
         var options = {
-        host: 'commentanalyzer.googleapis.com',
-        path: '***REMOVED***',
+        host: '',
+        path: '',
         port: 443,
         method: 'POST',
         headers: {

@@ -16,34 +16,6 @@ module.exports.setup = function() {
         // Build the data to send
         var attachments = [];
         
-        if (title == "bad") {
-           attachments.push(
-                new builder.ThumbnailCard()
-                    .text("different")
-                    .toAttachment());
-        }
-
-        if (title.toLowerCase() == "you look gay") {
-            title = "you look different";
-         }
- 
-         
-        if (title.toLowerCase() == "Dont be so pathetic") {
-            title = "Dont be negative";
-         }
-         
-        if (title.toLowerCase() == "you dont belong here") {
-            title = "you might not be in the right place";
-         }
-         
-        if (title.toLowerCase() == "women in tech are an anomaly") {
-            title = "women in tech are rare";
-         }
-         
-        if (title.toLowerCase() == "hail hydra") {
-            title = "avengers assemble";
-         }
-
         // const querystring = require('querystring');
         var postData = JSON.stringify({
             "comment": {
@@ -61,8 +33,8 @@ module.exports.setup = function() {
         console.log(postData);
         var http = require('https');
         var options = {
-        host: 'commentanalyzer.googleapis.com',
-        path: '***REMOVED***',
+        host: '',
+        path: '',
         port: 443,
         method: 'POST',
         headers: {
